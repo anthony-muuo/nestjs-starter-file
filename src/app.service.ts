@@ -1,12 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { LoggerService } from './core/logger/logger.service';
 
 @Injectable()
 export class AppService {
-  constructor(private configService: ConfigService) {}
+  constructor(private readonly logger: LoggerService) {}
   getHello() {
-    //environment is the name of the object property in config file
-    console.log('YOOH', this.configService.get<string>('environment'));
+    this.logger.log('called the getHello fn');
     return 'hello world';
   }
 }
