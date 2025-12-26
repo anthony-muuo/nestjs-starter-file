@@ -1,16 +1,46 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Injectable, LoggerService as NestLogger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import * as winston from 'winston';
 
 @Injectable()
 export class LoggerService implements NestLogger {
-  log(message: string) {
-    console.log(message);
+  private logger: winston.Logger;
+
+  constructor(private readonly configService: ConfigService) {
+    const isDevelopment =
+      this.configService.getOrThrow<string>('environment') === 'development';
+
+    const { combine, timestamp, json, colorize, printf } = winston.format;
+
+    const logFormat = isDevelopment
+      ? combine(
+          colorize(),
+          timestamp(),
+          printf(({ level, message, timestamp, context, meta, trace }) => {
+            return `${timestamp} ${level}: [${context}] ${message} ${
+              meta ? JSON.stringify(meta) : ''
+            } ${trace ? JSON.stringify(trace) : ''}`;
+          }),
+        )
+      : combine(timestamp(), json());
+
+    this.logger = winston.createLogger({
+      format: logFormat,
+      transports: [new winston.transports.Console()],
+    });
   }
 
-  error(message: string) {
-    console.error(message);
+  log(message: string, context?: string, meta?: any) {
+    this.logger.info(message, { context, meta });
   }
 
-  warn(message: string) {
-    console.warn(message);
+  error(message: string, trace?: string, context?: string, meta?: any) {
+    this.logger.error(message, { trace, context, meta });
+  }
+
+  warn(message: string, context?: string, meta?: any) {
+    this.logger.warn(message, { context, meta });
   }
 }
