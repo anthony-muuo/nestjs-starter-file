@@ -6,6 +6,7 @@ import { TransformResponseInterceptor } from './interceptors/transform-response/
 import { LoggerService } from './logger/logger.service';
 import { LoggerMiddleware } from './middleware/logger/logger.middleware';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AppDataSource } from 'src/data-source';
 
 @Global()
 @Module({
@@ -14,16 +15,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       isGlobal: true,
       load: [config],
     }),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.POSTGRES_HOST,
-      port: Number(process.env.POSTGRES_PORT),
-      username: process.env.POSTGRES_USER,
-      database: process.env.POSTGRES_DATABASE,
-      password: process.env.POSTGRES_PASSWORD,
-      autoLoadEntities: true,
-      synchronize: true,
-    }),
+    TypeOrmModule.forRoot(AppDataSource.options),
   ],
   providers: [
     {
