@@ -16,6 +16,6 @@ export class AppService {
     await this.cache.set('key', 'ducci', 1000);
     const value = await this.cache.get('key');
     console.log('valueeeeeefromcache', value);
-    return 'hello world';
+    return 'Hello World!';
   }
 }
