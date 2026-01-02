@@ -21,7 +21,8 @@
     "docker:start": "docker compose up -d",
     "db:drop": "typeorm-ts-node-commonjs schema:drop -d src/data-source.ts",
     "migration:generate": "typeorm-ts-node-commonjs migration:generate -d src/data-source.ts",
-    "migration:run": "typeorm-ts-node-commonjs migration:run -d src/data-source.ts"
+    "migration:run": "typeorm-ts-node-commonjs migration:run -d src/data-source.ts",
+    "migration:run:prod": "typeorm migration:run -d dist/data-source.js"
   },
   "dependencies": {
     "@nestjs/cache-manager": "^3.1.0",

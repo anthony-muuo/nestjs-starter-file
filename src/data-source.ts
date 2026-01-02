@@ -12,4 +12,8 @@ export const AppDataSource = new DataSource({
   entities: [__dirname + '/**/*.entity.{ts,js}'],
   migrationsTableName: 'migrations',
   migrations: [__dirname + '/migrations/**/*.ts'],
+  synchronize: false,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
